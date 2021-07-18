@@ -105,7 +105,7 @@ function arch() {
 
 	echo -e "\n${BOLD_GREEN}>${BOLD_RED}>${BOLD_WHITE} Installing all necessary packages for the Dekstop Enviroment or Window Manager...\n${RESET}"
 
-	pacman xorg -Sy xorg-server xorg-xinit libx11 libxinerama libxft webkit2gtk git alsa-utils pulseaudio pavucontrol noto-fonts-emoji htop neofetch
+	pacman -Sy xorg xorg-server xorg-xinit libx11 libxinerama libxft webkit2gtk git alsa-utils pulseaudio pavucontrol noto-fonts-emoji htop neofetch
 
 	echo -e "${BOLD_GREEN}\n>${BOLD_RED}>${BOLD_WHITE} Do you want to install
 ${BOLD_BLUE}1) ${BOLD_GREEN}Desktop Enviroment
@@ -124,14 +124,14 @@ ${BOLD_RED}[${BOLD_GREEN}1${BOLD_RED}/${BOLD_GREEN}2${BOLD_RED}/${BOLD_GREEN}3${
 	  read DE
 
 	  if [ $DE = 1 ] || [ $DE = "1)" ]; then
-			pacman -Sy --needed sddm
-			pacman -Sy --needed kde-applications
+			pacman -Sy sddm kde-applications plasma-desktop
 			systemctl enable sddm
 			systemctl enable NetworkManager
 			reboot
 	  elif [ $DE = 2 ] || [ $DE = "2)" ]; then
 			pacman -Sy xfce4 xfce4-goodies lightdm lightdm lightdm-gtk-greeter
 			systemctl enable lightdm
+			reboot
 		elif [ $DE = 3 ] || [ $DE = "3)" ]; then
 			pacman -Sy xorg-twm xorg-xclock xterm
 			pacman -Sy ttf-dejavu
@@ -139,6 +139,7 @@ ${BOLD_RED}[${BOLD_GREEN}1${BOLD_RED}/${BOLD_GREEN}2${BOLD_RED}/${BOLD_GREEN}3${
 			pacman -Sy lxterminal		
 			systemctl enable gdm.service
 			systemctl enable NetworkManager
+			reboot
 		fi
 
 	elif [ $GUI = 2 ] || [ $GUI = "2)" ]; then
