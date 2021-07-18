@@ -144,10 +144,10 @@ ${BOLD_RED}[${BOLD_GREEN}1${BOLD_RED}/${BOLD_GREEN}2${BOLD_RED}/${BOLD_GREEN}3${
 
 	elif [ $GUI = 2 ] || [ $GUI = "2)" ]; then
 		echo -e "\n${BOLD_GREEN}>${BOLD_RED}>${BOLD_WHITE} Which WM do you want to install?
-	${BOLD_BLUE}1) ${BOLD_GREEN}DWM - Dynamic Window Manager
-	${BOLD_BLUE}2) ${BOLD_GREEN}i3
+${BOLD_BLUE}1) ${BOLD_GREEN}DWM - Dynamic Window Manager
+${BOLD_BLUE}2) ${BOLD_GREEN}i3
 
-	${BOLD_RED}[${BOLD_GREEN}1${BOLD_RED}/${BOLD_GREEN}2${BOLD_RED}]:${RESET}"
+${BOLD_RED}[${BOLD_GREEN}1${BOLD_RED}/${BOLD_GREEN}2${BOLD_RED}]:${RESET}"
 		read WM
 
 		if [ $WM = 1 ] || [ $WM = "1)" ]; then
