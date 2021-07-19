@@ -57,7 +57,7 @@ function chroot() {
 	passwd
 
 	echo -e "\n\n${BOLD_GREEN}>${BOLD_RED}>${BOLD_WHITE} Installing a bootloader...${RESET}\n"
-	pacman -Sy grub efibootmgr
+	pacman -Sy grub efibootmgr os-prober
 	grub-install --target=x86_64-efi --efi-directory=/boot --bootloader-id=GRUB
 	grub-mkconfig -o /boot/grub/grub.cfg
 
@@ -105,7 +105,7 @@ function arch() {
 
 	echo -e "\n${BOLD_GREEN}>${BOLD_RED}>${BOLD_WHITE} Installing all necessary packages for the Dekstop Enviroment or Window Manager...\n${RESET}"
 
-	pacman -Sy xorg xorg-server xorg-xinit libx11 libxinerama libxft webkit2gtk git alsa-utils pulseaudio pavucontrol noto-fonts-emoji htop neofetch
+	pacman -Sy xorg xorg-server xorg-xinit libx11 libxinerama libxft webkit2gtk git alsa-utils pulseaudio pavucontrol noto-fonts-emoji htop neofetch vlc imagemagick
 
 	echo -e "${BOLD_GREEN}\n>${BOLD_RED}>${BOLD_WHITE} Do you want to install
 ${BOLD_BLUE}1) ${BOLD_GREEN}Desktop Enviroment
@@ -173,10 +173,22 @@ ${BOLD_RED}[${BOLD_GREEN}1${BOLD_RED}/${BOLD_GREEN}2${BOLD_RED}]:${RESET}"
 	exit
 }
 
+function check() {
+	dev="/dev/"
+	partition="$1"
+
+	if [[ $partition != *"${dev}"* ]]; then
+		partition="${dev}${partition}"
+	fi
+}
+
 function format_disk() {
 	echo -e "\n${BOLD_GREEN}>${BOLD_RED}> ${BOLD_WHITE}Choose the drive which you want to format (For example: /dev/sda):${RESET} "
 	read disk_choice
 	disk_choice=${disk_choice,,}
+	
+	check $disk_choice
+	disk_choice="$partition"
 }
 
 if [ $# -eq 1 ]; then
@@ -202,14 +214,14 @@ echo -e "${BOLD_GREEN}\n>${BOLD_RED}> ${BOLD_WHITE}Do you want to format the '${
 read confirm_disk_choice
 confirm_disk_choice=${confirm_disk_choice,,}
 
-if [ $confirm_disk_choice = "y" ] || [ $confirm_disk_choice = "yes" ] || [ -z $confirm_disk_choice ]; then
+if [ "$confirm_disk_choice" = "y" ] || [ "$confirm_disk_choice" = "yes" ] || [ -z "$confirm_disk_choice" ]; then
 	cgdisk $disk_choice
 else
 	echo -e "\n\n${BOLD_GREEN}>${BOLD_RED}> ${BOLD_WHITE}Do you want to choose the disk again? ${BOLD_RED}[${BOLD_GREEN}Y${BOLD_RED}/${BOLD_GREEN}n${BOLD_RED}]:${RESET} "
 	read choose_disk_again
 	choose_disk_again=${choice_disk_again,,}
 
-	if [ $choose_disk_again = "y" ] || [ $choose_disk_again = "yes" ] || [ -z $choose_disk_again ]; then
+	if [ "$choose_disk_again" = "y" ] || [ "$choose_disk_again" = "yes" ] || [ -z "$choose_disk_again" ]; then
 		format_disk
 	else
 		echo -e "\n\n${BOLD_GREEN}>${BOLD_RED}>${BOLD_WHITE} Bye!!!${RESET}\n\n"
@@ -223,16 +235,22 @@ echo -e "\n${BOLD_GREEN}>${BOLD_RED}> ${BOLD_WHITE}Please enter the name of the 
 read boot_partition
 boot_partition=${boot_partition,,}
 
+check $boot_partition
+boot_partition="$partition"
+
 mkfs.fat -F32 $boot_partition
 
 echo -e "\n\n${BOLD_GREEN}>${BOLD_RED}> ${BOLD_WHITE}Do you have a swap partition? ${BOLD_RED}[${BOLD_GREEN}Y${BOLD_RED}/${BOLD_GREEN}n${BOLD_RED}]:${RESET}"
 read swap
 swap=${swap,,}
 
-if [ $swap = "y" ] || [ $swap = "yes" ] || [ -z $swap ]; then
+if [ "$swap" = "y" ] || [ "$swap" = "yes" ] || [ -z "$swap" ]; then
 	echo -e "\n${BOLD_GREEN}>${BOLD_RED}>${BOLD_WHITE} Please enter the name of the swap partition (For example: /dev/sda2):${RESET}"
 	read swap_partition
 	swap_partition=${swap_partition,,}
+
+	check $swap_partition
+	swap_partition="$partition"
 
 	mkswap $swap_partition
 	swapon $swap_partition
@@ -242,13 +260,16 @@ echo -e "\n\n${BOLD_GREEN}>${BOLD_RED}>${BOLD_WHITE} Please enter the name of th
 read root_partition
 root_partition=${root_partition,,}
 
+check $root_partition
+root_partition="$partition"
+
 mkfs.ext4 $root_partition
 
 mount $root_partition /mnt
 mkdir -p /mnt/boot/
 mount $boot_partition /mnt/boot
 
-pacstrap /mnt base linux linux-firmware base-devel vi nano vim man-db sudo wget
+pacstrap /mnt base linux linux-firmware base-devel vi nano vim man-db wget
 genfstab -U /mnt >> /mnt/etc/fstab
 
 cp ${path}/${file} /mnt/
