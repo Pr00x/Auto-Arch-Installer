@@ -160,6 +160,7 @@ ${BOLD_RED}[${BOLD_GREEN}1${BOLD_RED}/${BOLD_GREEN}2${BOLD_RED}]:${RESET}"
 			cd /home/$username/st/ && make clean install
 			sed -i "s|/bin/sh|/usr/local/bin/st|" /home/$username/dwm/config.h
 			cd /home/$username/dwm/ && make clean install
+			pacman -Sy dmenu
 		elif [ $WM = 2 ] || [ $WM = "2)" ]; then
 			pacman -Sy i3
 			echo "exec i3" > /home/$username/.xinitrc
