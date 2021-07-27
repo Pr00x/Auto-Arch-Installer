@@ -105,7 +105,7 @@ function arch() {
 
 	echo -e "\n${BOLD_GREEN}>${BOLD_RED}>${BOLD_WHITE} Installing all necessary packages for the Dekstop Enviroment or Window Manager...\n${RESET}"
 
-	pacman -Sy xorg xorg-server xorg-xinit libx11 libxinerama libxft webkit2gtk git alsa-utils pulseaudio pavucontrol noto-fonts-emoji htop neofetch vlc imagemagick
+	pacman -Sy xorg xorg-server xorg-xinit libx11 libxinerama libxft webkit2gtk git alsa-utils pulseaudio pavucontrol noto-fonts-emoji htop neofetch vlc imagemagick firefox
 
 	echo -e "${BOLD_GREEN}\n>${BOLD_RED}>${BOLD_WHITE} Do you want to install
 ${BOLD_BLUE}1) ${BOLD_GREEN}Desktop Enviroment
